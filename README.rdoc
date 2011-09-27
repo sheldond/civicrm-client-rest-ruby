@@ -1,0 +1,39 @@
+A CiviCRM REST client for Ruby, forked from cap10morgan: https://github.com/cap10morgan/civicrm-client-rest-ruby
+
+Rest interface doc: http://wiki.civicrm.org/confluence/display/CRMDOC40/REST+interface
+CiviCRM API forum: http://forum.civicrm.org/index.php/board,41.0.html
+CiviCRM FLOSS Manual, Working with the API:  http://en.flossmanuals.net/CiviCRM/DevelopAPI/
+
+
+== Authorization
+Using the CiviCRM API froma remote server requires authorization. There are two ways to do this:
+
+* Call the API's login function passing your username and password and receive a PHP session ID in return (PHPSESSID). On all subsequent calls include PHPSESSID in the query.
+    e.g. civicrm.login({:name => 'my_user_name', :pass => 'my_password'})
+  (WARNING: at the time of writing, this form of authorization did not work due to a bug in CiviCRM)
+
+  or
+
+* Include your user's api_key in all API calls, no need to call the login function. You may have to define an api_key for your user in the civicrm_contacts table.
+
+Both forms of authorization require you to also include the site key in every query.
+
+
+== Config Options
+[+site_key+] the site key of your CiviCRM install. How to configure/find your site key: http://wiki.civicrm.org/confluence/display/CRMDOC40/Command-line+Script+Configuration
+[+civicrm_url+] the URL to the base of your CiviCRM install, e.g. https://yoursite.org/sites/all/modules/civicrm
+[+api_key+] optional, your user's api_key
+
+
+== Example
+
+  require 'civicrm'
+
+  civi_config = {:site_key => "34r089efiohsda34093409erf9uerfs",
+                 :civicrm_url => "https://www.example.org/path/to/civi/codebase/civicrm",
+                 :api_key => "3r0u43r09uewfi40u4098u34f34fo"}
+
+  civicrm = CiviCRM::RESTClient.new(civi_config)
+
+  civicrm.contact_get({:email => "contact@email.com"})
+
